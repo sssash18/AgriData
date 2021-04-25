@@ -49,17 +49,11 @@ ed_date = end_date.split("-")
 ed_date_fin = ed_date[2] + "-"
 ed_date_fin += month[ed_date[1]]+"-"+ed_date[0]
 
-for  i in states_list:
-	state = 0
-	for element in options:
-	    if element.get_attribute("label")==i:
-	    	state = element.get_attribute("value")
-
-	conn = psycopg2.connect("host=localhost dbname=agriiq user=postgres")
-	cur = conn.cursor()
-	cur.execute("""DROP TABLE IF EXISTS agmarket_monthly""")
-	cur.execute("""CREATE TABLE agmarket_monthly(
-			s_no integer PRIMARY KEY,
+conn = psycopg2.connect("host=localhost dbname=agriiq user=postgres")
+cur = conn.cursor()
+cur.execute("""DROP TABLE IF EXISTS agmarket_monthly""")
+cur.execute("""CREATE TABLE agmarket_monthly(
+			s_no integer,
 			State_Name text,
 			District_Name text,
 			Market_Name text,
@@ -70,7 +64,14 @@ for  i in states_list:
 			Max_Price float,
 			Modal_Price float,
 			Reported_date text)""")
-	conn.commit()
+conn.commit()
+for  i in states_list:
+	state = 0
+	for element in options:
+	    if element.get_attribute("label")==i:
+	    	state = element.get_attribute("value")
+
+	
 	url = "https://agmarknet.gov.in/SearchCmmMkt.aspx?Tx_Commodity="+str(comm_no)+"&Tx_State="+state+"&Tx_District=0&Tx_Market=0&DateFrom="+str(st_date_fin)+"&DateTo="+str(ed_date_fin)+"&Fr_Date="+str(st_date_fin)+"&To_Date=" + str(ed_date_fin)+"&Tx_Trend=2&Tx_CommodityHead="+str(commodity)+"&Tx_StateHead=--Select--&Tx_DistrictHead=--Select--&Tx_MarketHead=--Select--"
 	# print(url)
 	timeout = 10
