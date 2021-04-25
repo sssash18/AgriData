@@ -83,8 +83,15 @@ for  i in states_list:
 	except(requests.ConnectionError,requests.Timeout):
 		print("No Internet Connection Or Timeout")
 		exit()
-	df_list = pd.read_html(html)
-	df = df_list[-1]
+
+	df_list = 0
+	df =0
+	try:
+ 		df_list= pd.read_html(html)
+ 		df = df_list[-1]
+	except: 
+		print("No data found")
+		continue
 	df.to_csv('mydata'+i+'.csv')
 	with open('mydata'+i+'.csv','r') as f:
 		reader = csv.reader(f)
